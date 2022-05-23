@@ -1,6 +1,5 @@
 const socketCallbacks = require('./socketCallback.js')
 
-const path = require('path');
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -13,7 +12,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', (client) => {
+io.on('connection', (socket) => {
     console.log('Client connected')
-    socketCallbacks.initEvents(client)
+    socketCallbacks.initEvents(socket)
 });
