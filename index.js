@@ -1,12 +1,19 @@
 const socketCallbacks = require('./socketCallback.js')
 
-const app = require('express')()
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
-server.listen(5000)
+const path = require('path');
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+server.listen(1080)
 
-app.get('/', function (req, res) {
-    res.send('PSV Catering Backends')
-})
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
 
-io.on('connection', () => {});
+io.on('connection', (client) => {
+    console.log('Client connected')
+    socketCallbacks.initEvents(client)
+});
