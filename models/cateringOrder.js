@@ -1,9 +1,10 @@
 class CateringOrder{
-    constructor(id, totalPrice, addedProducts) {
+    constructor(id, totalPrice, addedProducts, done, scanned) {
         this.id = id
         this.totalPrice = totalPrice
         this.addedProducts = addedProducts
-        this.scanned = false
+        this.done = done
+        this.scanned = scanned
     }
 }
 

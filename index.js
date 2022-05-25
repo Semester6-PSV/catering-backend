@@ -14,5 +14,5 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log('Client connected')
-    socketCallbacks.initEvents(socket)
+    socketCallbacks.initEvents(socket, io)
 });

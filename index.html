@@ -1,17 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
-		<script src="http://localhost:1080/socket.io/socket.io.js"></script>
-	</head>
-	<body>
 
-		<script>
-			const socket = io("http://localhost:1080");
-            console.log(socket);
-		</script>
-	</body>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="http://localhost:1080/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+	<div class="orders-wrapper"></div>
+	
+	<script>
+		const socket = io("http://localhost:1080");
+		const ordersWrapper = document.querySelector('.orders-wrapper')
+
+		function renderOrder(order){
+			const div = document.createElement('div')
+			const title = document.createElement('p')
+			const completeButton = document.createElement('button')
+			const scanButton = document.createElement('button')
+
+			title.textContent = `Bestelling #${order.id}`
+
+			completeButton.textContent = 'Set order to done'
+			completeButton.addEventListener('click', () =>{
+				socket.emit('set-order-to-done', order)
+			})
+
+			scanButton.textContent = 'Scan QR code'
+			scanButton.addEventListener('click', () =>{
+				div.remove()
+				socket.emit('set-order-to-scanned', order)
+			})
+
+			div.style.display = 'flex'
+			div.appendChild(title)
+			div.appendChild(completeButton)
+			div.appendChild(scanButton)
+
+			ordersWrapper.appendChild(div)
+		}
+
+		socket.on('update-orders', orders =>{
+			ordersWrapper.innerHTML = ''
+			
+			orders.forEach(order => {
+				renderOrder(order)
+			});
+		})
+
+		socket.emit('request-all-orders', 'data', (orders) =>{
+			ordersWrapper.innerHTML = ''
+			
+			orders.forEach(order => {
+				renderOrder(order)
+			});
+		})
+	</script>
+</body>
+
 </html>
